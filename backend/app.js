@@ -51,3 +51,47 @@ app.post('/notes',async(req, res)=>{
         res.status(500).send('Error creating note');
     }
 });
+
+
+app.put('/notes/:id'),async(req,res)=> {
+    const {id}=req.params;
+    const {title,content}=req.body;
+
+    if (!title && !content) {
+        return res.status(400).send('Title or content must be provided for update.');
+    }
+
+    try{
+        const updateNote=await 
+        Note.findByIdAndUpdate(
+            id,
+            {
+               title,content,updatedAt:Date.now() 
+            },
+            {new:true,runValidators:true}
+        );
+
+        if (!updatedNote) return 
+        res.status(404).send('Note not found');
+        res.status(200).send('Error updating note.');
+    }catch (err){
+        res.status(500).send('Error updating note.');
+    }
+    };
+
+app.delete('/notes/:id',async (req, res)=>{
+    const {id}=req.params;
+    try{
+        const deleteNote=await Note.findByIdAndDelete(id);
+        if(!deleteNote)return res.status(404).send('Note not found.');
+        res.status(200).send('Note deleted successfully.');
+    } catch (err) {
+        res.status(500).send('Error deleting note.');
+      }
+    
+});
+
+app.listen(port,()=>{
+    console.log(`Server is running on http://localhost:${port}`);
+});
+
