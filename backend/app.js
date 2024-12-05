@@ -24,3 +24,30 @@ const noteSchema = new mongoose.Schema({
     });
 
     const Note = mongoose.model('Note',noteSchema);
+
+app.get('/notes', async(req, res)=>{
+    try{
+        const notes = await Note.find();
+        res.status(200).json(notes);
+
+    } catch (err) {
+        res.status(500).send('Error fetching notes');
+    }
+});
+
+app.post('/notes',async(req, res)=>{
+    const {title, content}=req.body;
+
+    if(!title || !content){
+        return res.status(400).send('Title and content are required.');
+
+    }
+
+    try{
+        const note = new Note({title, content});
+        await note.save();
+        res.status(201).json(note);
+    } catch (err) {
+        res.status(500).send('Error creating note');
+    }
+});
