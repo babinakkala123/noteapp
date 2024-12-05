@@ -69,7 +69,8 @@ body{
   gap: 20px;
   justify-content: center;
   align-items: center;
-  margin-top: 10px;
+  margin: 10px auto;
+
 }
 
 .note-card {
