@@ -53,31 +53,30 @@ app.post('/notes',async(req, res)=>{
 });
 
 
-app.put('/notes/:id'),async(req,res)=> {
-    const {id}=req.params;
-    const {title,content}=req.body;
 
+app.put('/notes/:id', async (req, res) => {
+    const { id } = req.params;
+    const { title, content } = req.body;
+  
     if (!title && !content) {
-        return res.status(400).send('Title or content must be provided for update.');
+      return res.status(400).send('Title or content must be provided for update.');
     }
-
-    try{
-        const updateNote=await 
-        Note.findByIdAndUpdate(
-            id,
-            {
-               title,content,updatedAt:Date.now() 
-            },
-            {new:true,runValidators:true}
-        );
-
-        if (!updatedNote) return 
-        res.status(404).send('Note not found');
-        res.status(200).send('Error updating note.');
-    }catch (err){
-        res.status(500).send('Error updating note.');
+  
+    try {
+      const updatedNote = await Note.findByIdAndUpdate(
+        id,
+        { title, content, updatedAt: Date.now() },
+        { new: true, runValidators: true }
+      );
+  
+      if (!updatedNote) return res.status(404).send('Note not found.');
+      res.status(200).json(updatedNote);
+    } catch (err) {
+      res.status(500).send('Error updating note.');
     }
-    };
+  });
+
+
 
 app.delete('/notes/:id',async (req, res)=>{
     const {id}=req.params;
@@ -94,4 +93,5 @@ app.delete('/notes/:id',async (req, res)=>{
 app.listen(port,()=>{
     console.log(`Server is running on http://localhost:${port}`);
 });
+
 
